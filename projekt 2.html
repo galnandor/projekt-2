@@ -6,30 +6,137 @@
     <title>Mixtipps</title>
     <!-- Bootstrap 4 CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        .floating-menu {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            padding: 15px;
-            background-color: #f8f9fa;
+        /* Általános dizájn */
+        body {
+            background: linear-gradient(to bottom, #f5f5f5, #e9ecef);
+            font-family: Arial, sans-serif;
+        }
+
+
+        nav {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* Oldalelrendezés */
+        .main-content {
+            margin-top: 20px;
+            display: flex;
+        }
+
+
+        .matches {
+            flex: 2;
+            margin-right: 15px; /* Kisebb szünet */
+        }
+
+
+        .bet-panel {
+            flex: 0.8; /* Fogadósáv kisebb */
+            background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 10px;
+            padding: 15px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-
-
-        .floating-menu.active {
-            display: block;
-        }
-
-
-        .bet-list {
-            max-height: 150px;
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
             overflow-y: auto;
         }
+
+
+        /* Kártyák megjelenése */
+        .card {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 10px; /* Kisebb margó */
+        }
+
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+
+        .card-body button {
+            margin: 5px;
+        }
+
+
+        /* Fogadás gombok */
+        .btn-primary:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+
+
+        .btn-success {
+            background-color: #28a745 !important;
+        }
+
+
+        /* Animáció */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+
+        /* Feliratok a szorzók fölé */
+        .bet-label {
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+        }
+
+
+        /* Flexbox a gomboknak egymás mellé helyezéséhez */
+        .bet-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+
+        .bet-buttons .btn {
+            flex: 1;
+        }
+
+
+        /* A szorzók és feliratok egy sorban legyenek */
+        .bet-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+
+        .bet-item .bet-label {
+            margin-right: 15px; /* Kisebb margó */
+        }
+
+
+        .bet-item .bet-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -38,80 +145,136 @@
     </nav>
 
 
-    <div class="container mt-4">
-        <h1 class="text-center">Sportfogadás</h1>
-        <p class="text-center">Válassz mérkőzést és tedd meg a téted!</p>
+    <div class="container-fluid main-content">
+        <!-- Mérkőzések szekció -->
+        <div class="matches">
+            <h2 class="text-center">Sportfogadás</h2>
 
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Mérkőzés</th>
-                    <th>Hazai</th>
-                    <th>Döntetlen</th>
-                    <th>Vendég</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Diósgyőri VTK vs Kecskeméti TE</td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.2" data-match="Diósgyőri VTK vs Kecskeméti TE - Hazai">2.2</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="3.6" data-match="Diósgyőri VTK vs Kecskeméti TE - Döntetlen">3.6</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.9" data-match="Diósgyőri VTK vs Kecskeméti TE - Vendég">2.9</button></td>
-                </tr>
-                <tr>
-                    <td>ETO FC Győr vs Fehérvár FC</td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.8" data-match="ETO FC Győr vs Fehérvár FC - Hazai">2.8</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="3.0" data-match="ETO FC Győr vs Fehérvár FC - Döntetlen">3.0</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="1.9" data-match="ETO FC Győr vs Fehérvár FC - Vendég">1.9</button></td>
-                </tr>
-                <tr>
-                    <td>MTK Budapest FC vs Újpest FC</td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.5" data-match="MTK Budapest FC vs Újpest FC - Hazai">2.5</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="3.1" data-match="MTK Budapest FC vs Újpest FC - Döntetlen">3.1</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.0" data-match="MTK Budapest FC vs Újpest FC - Vendég">2.0</button></td>
-                </tr>
-                <tr>
-                    <td>Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC</td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.2" data-match="Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC - Hazai">2.2</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.9" data-match="Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC - Döntetlen">2.9</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.3" data-match="Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC - Vendég">2.3</button></td>
-                </tr>
-                <tr>
-                    <td>Paksi FC vs Puskás Akadémia FC</td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="1.8" data-match="Paksi FC vs Puskás Akadémia FC - Hazai">1.8</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="1.5" data-match="Paksi FC vs Puskás Akadémia FC - Döntetlen">1.5</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="2.0" data-match="Paksi FC vs Puskás Akadémia FC - Vendég">2.0</button></td>
-                </tr>
-                <tr>
-                    <td>Ferencvárosi TC vs Debreceni VSC</td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="1.8" data-match="Ferencvárosi TC vs Debreceni VSC - Hazai">1.8</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="3.1" data-match="Ferencvárosi TC vs Debreceni VSC - Döntetlen">3.1</button></td>
-                    <td><button class="btn btn-primary bet-btn" data-odds="4.0" data-match="Ferencvárosi TC vs Debreceni VSC - Vendég">4.0</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <!-- Diósgyőri VTK vs Kecskeméti TE -->
+            <div class="card">
+                <div class="card-header">Diósgyőri VTK vs Kecskeméti TE</div>
+                <div class="card-body text-center">
+                    <div class="bet-item">
+                        <div class="bet-label">Hazai</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.2" data-match="Diósgyőri VTK vs Kecskeméti TE - Hazai">2.2</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Döntetlen</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="3.6" data-match="Diósgyőri VTK vs Kecskeméti TE - Döntetlen">3.6</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Vendég</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.9" data-match="Diósgyőri VTK vs Kecskeméti TE - Vendég">2.9</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-    <div id="floatingMenu" class="floating-menu">
-        <h5>Fogadási összegzés</h5>
-        <ul id="betList" class="bet-list list-unstyled"></ul>
-        <p id="totalOdds">Összesített odds: 0.00</p>
-        <div class="form-group">
-            <label for="betAmount">Tét összege (Ft):</label>
-            <input type="number" id="betAmount" class="form-control" placeholder="Legalább 300 Ft" min="300">
+            <!-- ETO FC Győr vs Fehérvár FC -->
+            <div class="card">
+                <div class="card-header">ETO FC Győr vs Fehérvár FC</div>
+                <div class="card-body text-center">
+                    <div class="bet-item">
+                        <div class="bet-label">Hazai</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.8" data-match="ETO FC Győr vs Fehérvár FC - Hazai">2.8</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Döntetlen</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="3.0" data-match="ETO FC Győr vs Fehérvár FC - Döntetlen">3.0</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Vendég</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="1.9" data-match="ETO FC Győr vs Fehérvár FC - Vendég">1.9</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- MTK Budapest FC vs Újpest FC -->
+            <div class="card">
+                <div class="card-header">MTK Budapest FC vs Újpest FC</div>
+                <div class="card-body text-center">
+                    <div class="bet-item">
+                        <div class="bet-label">Hazai</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.5" data-match="MTK Budapest FC vs Újpest FC - Hazai">2.5</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Döntetlen</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="3.1" data-match="MTK Budapest FC vs Újpest FC - Döntetlen">3.1</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Vendég</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.0" data-match="MTK Budapest FC vs Újpest FC - Vendég">2.0</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC -->
+            <div class="card">
+                <div class="card-header">Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC</div>
+                <div class="card-body text-center">
+                    <div class="bet-item">
+                        <div class="bet-label">Hazai</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.2" data-match="Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC - Hazai">2.2</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Döntetlen</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="3.4" data-match="Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC - Döntetlen">3.4</button>
+                        </div>
+                    </div>
+                    <div class="bet-item">
+                        <div class="bet-label">Vendég</div>
+                        <div class="bet-buttons">
+                            <button class="btn btn-primary bet-btn" data-odds="2.7" data-match="Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC - Vendég">2.7</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p id="potentialWin">Várható nyeremény: 0 Ft</p>
-        <button class="btn btn-sm btn-primary" id="placeBet" disabled>Fogadás</button>
-        <button class="btn btn-sm btn-danger" id="clearBets">Tétek törlése</button>
+
+
+        <!-- Fogadósáv -->
+        <div class="bet-panel">
+            <h4>Fogadás</h4>
+            <p><strong>Összesített odds:</strong> <span id="totalOdds">0.00</span></p>
+            <ul id="betList"></ul>
+            <div>
+                <input type="number" id="betAmount" class="form-control" placeholder="Legalább 300 Ft" min="300">
+            </div>
+            <p id="potentialWin">Várható nyeremény: 0 Ft</p>
+            <button class="btn btn-primary" id="placeBet" disabled>Fogadás</button>
+            <button class="btn btn-danger" id="clearBets">Tétek törlése</button>
+        </div>
     </div>
 
 
     <script>
+        // JavaScript kód a fogadási funkciókhoz
         document.addEventListener('DOMContentLoaded', function () {
             const betButtons = document.querySelectorAll('.bet-btn');
-            const floatingMenu = document.getElementById('floatingMenu');
             const betList = document.getElementById('betList');
             const totalOddsDisplay = document.getElementById('totalOdds');
             const betAmountInput = document.getElementById('betAmount');
@@ -196,12 +359,10 @@
 
                 totalOddsDisplay.textContent = `Összesített odds: ${totalOdds.toFixed(2)}`;
                 updatePotentialWin();
-                floatingMenu.classList.toggle('active', selectedBets.size > 0);
             }
 
 
-   
-         function updatePotentialWin() {
+            function updatePotentialWin() {
                 const betAmount = parseFloat(betAmountInput.value) || 0;
                 const potentialWin = (totalOdds * betAmount).toFixed(2);
                 potentialWinDisplay.textContent = `Várható nyeremény: ${potentialWin} Ft`;
