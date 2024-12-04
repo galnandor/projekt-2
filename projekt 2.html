@@ -190,7 +190,7 @@
         document.getElementById("placeBet").addEventListener("click", function () {
         alert(`Fogadás megtörtént! Összesített odds: ${totalOdds.toFixed(2)}, Tét: ${document.getElementById("betAmount").value} Ft`);
         selectedBets.clear();
-        totalOdds = 1.00;
+        totalOdds = 0.00;
         updateBetList();
         // Oldal újratöltése a fogadás után
         location.reload();
