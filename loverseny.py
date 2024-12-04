@@ -101,12 +101,12 @@ canvas = Canvas(main_screen, width=900, height=500, bg="white")
 canvas.pack(pady=20)
 
 # Képek importálása
-red_horse_img = PhotoImage(file="./képek/red-horse.png")
-blue_horse_img = PhotoImage(file="./képek/blue-horse.png")
-yellow_horse_img = PhotoImage(file="./képek/yellow-horse.png")
-black_horse_img = PhotoImage(file="./képek/black-horse.png")
-orange_horse_img = PhotoImage(file="./képek/orange-horse.png")
-grey_horse_img = PhotoImage(file="./képek/grey-horse.png")
+red_horse_img = PhotoImage(file="./kepek/red-horse.png")
+blue_horse_img = PhotoImage(file="./kepek/blue-horse.png")
+yellow_horse_img = PhotoImage(file="./kepek/yellow-horse.png")
+black_horse_img = PhotoImage(file="./kepek/black-horse.png")
+orange_horse_img = PhotoImage(file="./kepek/orange-horse.png")
+grey_horse_img = PhotoImage(file="./kepek/grey-horse.png")
 
 # A képek átméretezése
 red_horse_img = red_horse_img.zoom(15)
