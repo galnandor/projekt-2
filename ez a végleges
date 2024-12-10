@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixtipps</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #f5f5f5, #e9ecef);
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .main-content {
+            display: flex;
+        }
+        .menu {
+            width: 200px;
+            background-color: #343a40;
+            color: white;
+            height: 100vh;
+            padding: 10px;
+        }
+        .menu ul {
+            list-style: none;
+            padding: 0;
+        }
+        .menu ul li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .menu ul li:hover {
+            background-color: #495057;
+        }
+        .matches {
+            flex: 2;
+            margin: 20px;
+        }
+        .bet-panel {
+            width: 300px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+        .card {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 15px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .card-body button {
+            margin: 5px;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+        .btn-success {
+            background-color: #28a745 !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Mixtipps</a>
+    </nav>
+    <div class="main-content">
+        <div class="menu">
+            <ul>
+                <li data-sport="football">Foci</li>
+                <li data-sport="basketball">Kosárlabda</li>
+                <li data-sport="handball">Kézilabda</li>
+            </ul>
+        </div>
+        <div class="matches" id="matches">
+            <!-- Mérkőzések dinamikusan töltődnek -->
+        </div>
+        <div class="bet-panel">
+            <h4>Fogadás</h4>
+            <p><strong>Egyenleg:</strong> <span id="balanceDisplay">0 Ft</span></p>
+            <div>
+                <input type="number" id="topUpAmount" class="form-control" placeholder="Feltöltési összeg (max. 100000 Ft)" min="1" max="100000">
+                <button class="btn btn-success mt-2" id="topUpButton">Feltöltés</button>
+            </div>
+            <p><strong>Összesített odds:</strong> <span id="totalOdds">1.00</span></p>
+            <ul id="betList"></ul>
+            <div>
+                <input type="number" id="betAmount" class="form-control" placeholder="Legalább 300 Ft" min="300">
+            </div>
+            <p id="potentialWin">Várható nyeremény: 0 Ft</p>
+            <button class="btn btn-primary" id="placeBet" disabled>Fogadás</button>
+            <button class="btn btn-danger" id="clearBets">Tétek törlése</button>
+        </div>
+    </div>
+    <script>
+        const sports = {
+            football: [
+                { match: "Diósgyőri VTK vs Kecskeméti TE", odds: [2.2, 3.6, 2.9] },
+                { match: "ETO FC Győr vs Fehérvár FC", odds: [2.8, 3.0, 1.9] },
+                { match: "Ferencvárosi TC vs Puskás Akadémia FC", odds: [1.9, 2.4, 2.6] },
+                { match: "Paksi FC vs MTK Budapest FC", odds: [1.8, 3.0, 2.3] },
+                { match: "Zalaegerszegi TE FC vs Nyíregyháza Spartacus FC", odds: [2.3, 1.3, 2.4] },
+                { match: "Debreceni VSC vs Újpest FC", odds: [2.2, 4, 2.1] }
+            ],
+            basketball: [
+                { match: "Los Angeles Lakers vs Miami Heat", odds: [2.3, 3.8, 2.3] },
+                { match: "Golden State Warriors vs Brooklyn Nets", odds: [1.9, 3.2, 2.4] },
+                { match: "Oklahoma City Thunder vs Houston Rockets", odds: [1.7, 3.2, 2.0] },
+                { match: "Dallas Mavericks vs Memphis Grizzlies", odds: [3.1, 3.0, 2.1] },
+                { match: "Los Angeles Clippers vs Phoenix Suns", odds: [1.8, 2.4, 2.1] },
+                { match: "Denver Nuggets vs San Antonio Spurs", odds: [1.5, 3.8, 2.6] },
+                { match: "Cleveland Cavaliers vs Boston Celtics", odds: [2.2, 3.8, 2.1] },
+                { match: "Orlando Magic vs New York Knicks", odds: [1.7, 2.1, 2.1] },
+                { match: "Milwaukee Bucks vs Atlanta Hawks", odds: [2.8, 2.5, 2.1] },
+                { match: "Brooklyn Nets vs Chicago Bulls", odds: [1.5, 3.1, 2.0] },            ],
+            handball: [
+                { match: "Magyarország N vs Montenegró N", odds: [1.5, 8.5, 3.3 ] },
+                { match: "Magyarország N vs Lengyelország N", odds: [1.6, 8.0, 2.3] },
+                { match: "Magyarország N vs Románia N", odds: [1.9, 10.5, 2.9] },
+                { match: "Hollandia N vs Norvégia N", odds: [3.0, 11.0, 1.7] },
+                { match: "Magyarorszag N vs Franciaország N", odds: [4.0, 10.0, 1.3] },                            ]
+        };
+
+        let selectedBets = new Map();
+        let totalOdds = 1.00;
+        let balance = 0;
+
+        function updateBalanceDisplay() {
+            document.getElementById("balanceDisplay").textContent = `${balance.toFixed(2)} Ft`;
+        }
+
+        function renderMatches(sport) {
+            const matchesContainer = document.getElementById("matches");
+            matchesContainer.innerHTML = "";
+            sports[sport].forEach(event => {
+                const card = document.createElement("div");
+                card.classList.add("card");
+                card.innerHTML = `
+                    <div class="card-header">${event.match}</div>
+                    <div class="card-body text-center">
+                        ${event.odds.map((odd, index) => `
+                            <button class="btn btn-primary bet-btn" data-match="${event.match}" data-odds="${odd}">
+                                ${["Hazai", "Döntetlen", "Vendég"][index] || "Tét"} (${odd})
+                            </button>
+                        `).join("")}
+                    </div>
+                `;
+                matchesContainer.appendChild(card);
+            });
+            attachBetHandlers();
+        }
+
+        function attachBetHandlers() {
+            document.querySelectorAll(".bet-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    const match = this.getAttribute("data-match");
+                    const odds = parseFloat(this.getAttribute("data-odds"));
+
+                    if (selectedBets.has(match)) {
+                        selectedBets.delete(match);
+                        this.classList.remove("btn-success");
+                        this.classList.add("btn-primary");
+                        totalOdds /= odds;
+                    } else {
+                        selectedBets.set(match, odds);
+                        this.classList.remove("btn-primary");
+                        this.classList.add("btn-success");
+                        totalOdds *= odds;
+                    }
+                    updateBetList();
+                });
+            });
+        }
+
+        function updateBetList() {
+            const betList = document.getElementById("betList");
+            const totalOddsDisplay = document.getElementById("totalOdds");
+            const potentialWinDisplay = document.getElementById("potentialWin");
+            const betAmountInput = document.getElementById("betAmount");
+
+            betList.innerHTML = "";
+            selectedBets.forEach((odds, match) => {
+                const li = document.createElement("li");
+                li.textContent = `${match} (odds: ${odds.toFixed(2)})`;
+                betList.appendChild(li);
+            });
+
+            totalOddsDisplay.textContent = totalOdds.toFixed(2);
+            const betAmount = parseFloat(betAmountInput.value) || 0;
+            potentialWinDisplay.textContent = `Várható nyeremény: ${(betAmount * totalOdds).toFixed(2)} Ft`;
+        }
+
+        document.getElementById("topUpButton").addEventListener("click", function () {
+            const topUpAmount = parseFloat(document.getElementById("topUpAmount").value) || 0;
+            if (topUpAmount > 0 && topUpAmount <= 100000) {
+                balance += topUpAmount;
+                updateBalanceDisplay();
+                alert(`Sikeres feltöltés: ${topUpAmount} Ft!`);
+                document.getElementById("topUpAmount").value = '';
+            } else {
+                alert("Helytelen összeg! Kérjük, adjon meg 1 és 100000 Ft közötti összeget.");
+            }
+        });
+
+        document.getElementById("betAmount").addEventListener("input", function () {
+            const betAmount = parseFloat(this.value) || 0;
+            document.getElementById("placeBet").disabled = !(betAmount >= 300 && selectedBets.size > 0);
+            updateBetList();
+        });
+
+        document.getElementById("placeBet").addEventListener("click", function () {
+            const betAmount = parseFloat(document.getElementById("betAmount").value) || 0;
+            if (betAmount > balance) {
+                alert("Nincs elegendő egyenleg a fogadáshoz!");
+            } else if (betAmount >= 300) {
+                balance -= betAmount;
+                updateBalanceDisplay();
+                alert(`Fogadás megtörtént! Tét: ${betAmount} Ft, Összesített odds: ${totalOdds.toFixed(2)}`);
+                selectedBets.clear();
+                totalOdds = 1.00;
+                updateBetList();
+            } else {
+                alert("A minimális tét 300 Ft!");
+            }
+        });
+
+        document.getElementById("clearBets").addEventListener("click", function () {
+            selectedBets.clear();
+            totalOdds = 1.00;
+            updateBetList();
+        });
+
+        document.querySelectorAll(".menu ul li").forEach(item => {
+            item.addEventListener("click", function () {
+                renderMatches(this.dataset.sport);
+            });
+        });
+
+        // Inicializálás
+        updateBalanceDisplay();
+        renderMatches("football");
+    </script>
+</body>
+</html>
